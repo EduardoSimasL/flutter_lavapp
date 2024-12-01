@@ -27,7 +27,6 @@ class LoginPage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Imagem
             Container(
               height: 200,
               width: 200,
@@ -39,7 +38,6 @@ class LoginPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-            // Título
             const Text(
               'Login',
               style: TextStyle(
@@ -50,10 +48,8 @@ class LoginPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-            // Formulário
             Column(
               children: [
-                // Campo E-mail
                 TextField(
                   decoration: InputDecoration(
                     filled: true,
@@ -90,14 +86,12 @@ class LoginPage extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 20),
-                // Botões
+
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     GestureDetector(
-                      onTap: () {
-                        // Ação para redirecionar para a página de cadastro
-                      },
+                      onTap: () {},
                       child: const Text(
                         'Cadastre-se',
                         style: TextStyle(
