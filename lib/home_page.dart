@@ -3,29 +3,32 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'blocs/navigation_bloc.dart';
 import 'blocs/navigation_event.dart';
 import 'blocs/navigation_state.dart';
-// import 'schedule_page.dart';
-// import 'live_machines_page.dart';
+import 'schedule_page.dart';
+import 'live_machines_page.dart';
 import 'package:Lavapp/utils/colors.dart';
 
 class HomePage extends StatelessWidget {
-
   final List<String> statusItems = ['Lavagem 1', 'Lavagem 2', 'Lavagem 3'];
-  final List<String> agendamentoItems = ['04/12 - 12:30', '05/12 - 14:00', '06/12 - 10:00'];
+  final List<String> agendamentoItems = [
+    '04/12 - 12:30',
+    '05/12 - 14:00',
+    '06/12 - 10:00'
+  ];
 
   @override
   Widget build(BuildContext context) {
     return BlocListener<NavigationBloc, NavigationState>(
       listener: (context, state) {
         if (state is ScheduleState) {
-          // Navigator.push(
-          //   context,
-          //   MaterialPageRoute(builder: (context) => SchedulePage()),
-          // );
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => SchedulePage()),
+          );
         } else if (state is LiveMachinesState) {
-          // Navigator.push(
-          //   context,
-          //   MaterialPageRoute(builder: (context) => LiveMachinesPage()),
-          // );
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => LiveMachinesPage()),
+          );
         } else if (state is HomeState) {
           Navigator.popUntil(context, (route) => route.isFirst);
         }
@@ -69,7 +72,8 @@ class HomePage extends StatelessWidget {
                             fontWeight: FontWeight.bold)),
                     const SizedBox(height: 8),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 6),
                       decoration: BoxDecoration(
                         color: AppColors.lightBlue,
                         borderRadius: BorderRadius.circular(20),
@@ -91,8 +95,6 @@ class HomePage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 24),
-                // _buildUserInfoSection(),
-                // const SizedBox(height: 16),
                 _buildSectionTitle('Status da lavagem'),
                 const SizedBox(height: 8),
                 _buildStatusLavagem(context, statusItems),
@@ -112,13 +114,6 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  // Widget _buildUserInfoSection() {
-  //   return Row(
-  //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //     children: [],
-  //   );
-  // }
-
   Widget _buildSectionTitle(String title) {
     return Text(
       title,
@@ -131,27 +126,26 @@ class HomePage extends StatelessWidget {
   }
 
   Widget _buildStatusLavagem(BuildContext context, List<String> items) {
-  return Column(
-    children: items
-        .map((item) => Padding(
-              padding: const EdgeInsets.only(bottom: 8.0),
-              child: _buildLavagemItem(context, item),
-            ))
-        .toList(),
-  );
-}
+    return Column(
+      children: items
+          .map((item) => Padding(
+                padding: const EdgeInsets.only(bottom: 8.0),
+                child: _buildLavagemItem(context, item),
+              ))
+          .toList(),
+    );
+  }
 
-Widget _buildAgendamentos(BuildContext context, List<String> items) {
-  return Column(
-    children: items
-        .map((item) => Padding(
-              padding: const EdgeInsets.only(bottom: 8.0),
-              child: _buildAgendamentoItem(context, item),
-            ))
-        .toList(),
-  );
-}
-
+  Widget _buildAgendamentos(BuildContext context, List<String> items) {
+    return Column(
+      children: items
+          .map((item) => Padding(
+                padding: const EdgeInsets.only(bottom: 8.0),
+                child: _buildAgendamentoItem(context, item),
+              ))
+          .toList(),
+    );
+  }
 
   Widget _buildLavagemItem(BuildContext context, String title) {
     return Container(
@@ -194,45 +188,46 @@ Widget _buildAgendamentos(BuildContext context, List<String> items) {
   }
 
   Widget _buildTimeRemaining(BuildContext context) {
-  return ElevatedButton(
-    style: ElevatedButton.styleFrom(
-      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      backgroundColor: AppColors.lightBlue,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        backgroundColor: AppColors.lightBlue,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
       ),
-    ),
-    onPressed: () {
-      // Adicione a ação aqui
-      BlocProvider.of<NavigationBloc>(context).add(NavigateToLiveMachinesPage());
-    },
-    child: Text(
-      'faltam 29:53 min',
-      style: TextStyle(color: Colors.white),
-    ),
-  );
-}
-
-Widget _buildTimeScheduled(BuildContext context, String scheduleTime) {
-  return ElevatedButton(
-    style: ElevatedButton.styleFrom(
-      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      backgroundColor: AppColors.lightBlue,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
+      onPressed: () {
+        // Adicione a ação aqui
+        BlocProvider.of<NavigationBloc>(context)
+            .add(NavigateToMySchedulePage());
+      },
+      child: const Text(
+        'faltam 29:53 min',
+        style: TextStyle(color: Colors.white),
       ),
-    ),
-    onPressed: () {
-      // Adicione a ação aqui
-      //BlocProvider.of<NavigationBloc>(context).add(NavigateToLiveMachinesPage());
-    },
-    child: Text(
-      scheduleTime,
-      style: TextStyle(color: Colors.white),
-    ),
-  );
-}
+    );
+  }
 
+  Widget _buildTimeScheduled(BuildContext context, String scheduleTime) {
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        backgroundColor: AppColors.lightBlue,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+      ),
+      onPressed: () {
+        // Adicione a ação aqui
+        BlocProvider.of<NavigationBloc>(context)
+            .add(NavigateToLiveMachinesPage());
+      },
+      child: Text(
+        scheduleTime,
+        style: const TextStyle(color: Colors.white),
+      ),
+    );
+  }
 
   Widget _buildAgenda(BuildContext context) {
     return Container(
@@ -245,7 +240,7 @@ Widget _buildTimeScheduled(BuildContext context, String scheduleTime) {
             color: Colors.grey.withOpacity(0.5),
             spreadRadius: 1,
             blurRadius: 8,
-            offset: Offset(0, 4), // Sombra na parte inferior
+            offset: const Offset(0, 4),
           ),
         ],
       ),
@@ -268,18 +263,16 @@ Widget _buildTimeScheduled(BuildContext context, String scheduleTime) {
         print('$label pressionado');
       },
       style: ElevatedButton.styleFrom(
-        backgroundColor:
-            AppColors.darkBlue, // Cor de fundo roxa conforme a imagem
-        foregroundColor: Colors.white, // Cor do texto branca
-        minimumSize:
-            Size(double.infinity, 48), // Faz o botão preencher a largura
+        backgroundColor: AppColors.darkBlue,
+        foregroundColor: Colors.white,
+        minimumSize: const Size(double.infinity, 48),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(24), // Bordas arredondadas
+          borderRadius: BorderRadius.circular(24),
         ),
       ),
       child: Text(
         label,
-        style: TextStyle(fontSize: 16),
+        style: const TextStyle(fontSize: 16),
       ),
     );
   }

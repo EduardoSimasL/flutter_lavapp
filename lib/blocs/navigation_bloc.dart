@@ -16,6 +16,10 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
     on<NavigateToLiveMachinesPage>((event, emit) { // Novo evento
       emit(LiveMachinesState());
     });
+
+    on<NavigateToMySchedulePage>((event, emit) { // Novo evento
+      emit(MyScheduleState());
+    });
   }
 }
 
