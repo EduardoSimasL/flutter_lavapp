@@ -1,5 +1,8 @@
+import 'package:Lavapp/components/app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+// import 'schedule_page.dart';
+import 'pages/live_machines_page.dart';
 import 'package:Lavapp/blocs/navigation_bloc.dart';
 import 'package:Lavapp/blocs/navigation_event.dart';
 import 'package:Lavapp/blocs/navigation_state.dart';
@@ -18,7 +21,17 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocListener<NavigationBloc, NavigationState>(
       listener: (context, state) {
-        if (state is MyScheduleState) {
+
+        if (state is ScheduleState) {
+          // Navigator.push(
+          //   context,
+          //   MaterialPageRoute(builder: (context) => SchedulePage()),
+          // );
+        } else if (state is LiveMachinesState) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => LiveMachinesPage()),
+            }else if (state is MyScheduleState) {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => MySchedulePage()),
@@ -28,60 +41,39 @@ class HomePage extends StatelessWidget {
         }
       },
       child: Scaffold(
-        appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(150.0),
-          child: Container(
-            decoration: BoxDecoration(
-              color: AppColors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.5),
-                  spreadRadius: 1,
-                  blurRadius: 2,
-                  offset: Offset(0, 4),
-                ),
-              ],
-            ),
-            child: AppBar(
-              backgroundColor: AppColors.white,
-              elevation: 0,
-              flexibleSpace: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Good Morning',
-                      style: TextStyle(
-                        color: AppColors.gray,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const Text(
-                      'Usuário',
-                      style: TextStyle(
-                        fontSize: 24,
-                        color: AppColors.darkBlue,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-                      decoration: BoxDecoration(
-                        color: AppColors.lightBlue,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: const Text(
-                        'R\$ 00,00',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                  ],
+        appBar: CustomAppBar(
+          content: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Good Morning',
+                style: TextStyle(
+                  color: AppColors.gray,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-            ),
+              const Text(
+                'Usuário',
+                style: TextStyle(
+                  fontSize: 24,
+                  color: AppColors.darkBlue,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                decoration: BoxDecoration(
+                  color: AppColors.lightBlue,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: const Text(
+                  'R\$ 00,00',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ],
           ),
         ),
         body: Padding(
@@ -123,23 +115,23 @@ class HomePage extends StatelessWidget {
 
   Widget _buildStatusLavagem(BuildContext context, List<String> items) {
     return Column(
-      children: items.map((item) {
-        return Padding(
-          padding: const EdgeInsets.only(bottom: 8.0),
-          child: _buildLavagemItem(context, item),
-        );
-      }).toList(),
+      children: items
+          .map((item) => Padding(
+                padding: const EdgeInsets.only(bottom: 8.0),
+                child: _buildLavagemItem(context, item),
+              ))
+          .toList(),
     );
   }
 
   Widget _buildAgendamentos(BuildContext context, List<String> items) {
     return Column(
-      children: items.map((item) {
-        return Padding(
-          padding: const EdgeInsets.only(bottom: 8.0),
-          child: _buildAgendamentoItem(context, item),
-        );
-      }).toList(),
+      children: items
+          .map((item) => Padding(
+                padding: const EdgeInsets.only(bottom: 8.0),
+                child: _buildAgendamentoItem(context, item),
+              ))
+          .toList(),
     );
   }
 
@@ -186,16 +178,17 @@ class HomePage extends StatelessWidget {
   Widget _buildTimeRemaining(BuildContext context) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         backgroundColor: AppColors.lightBlue,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
       ),
       onPressed: () {
-        BlocProvider.of<NavigationBloc>(context).add(NavigateToLiveMachinesPage());
+        BlocProvider.of<NavigationBloc>(context)
+            .add(NavigateToLiveMachinesPage());
       },
-      child: const Text(
+      child: Text(
         'faltam 29:53 min',
         style: TextStyle(color: Colors.white),
       ),
