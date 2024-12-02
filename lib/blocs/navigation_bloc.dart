@@ -13,14 +13,14 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
       emit(HomeState());
     });
 
-    on<NavigateToLiveMachinesPage>((event, emit) { // Novo evento
+    on<NavigateToLiveMachinesPage>((event, emit) {
+      // Novo evento
       emit(LiveMachinesState());
     });
 
-    on<NavigateToMySchedulePage>((event, emit) { // Novo evento
+    on<NavigateToMySchedulePage>((event, emit) {
+      // Novo evento
       emit(MyScheduleState());
     });
   }
 }
-
-

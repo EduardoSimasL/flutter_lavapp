@@ -1,10 +1,12 @@
+import 'package:Lavapp/components/app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'blocs/navigation_bloc.dart';
-import 'blocs/navigation_event.dart';
-import 'blocs/navigation_state.dart';
 import 'schedule_page.dart';
-import 'live_machines_page.dart';
+import 'pages/live_machines_page.dart';
+import 'package:Lavapp/blocs/navigation_bloc.dart';
+import 'package:Lavapp/blocs/navigation_event.dart';
+import 'package:Lavapp/blocs/navigation_state.dart';
+import 'package:Lavapp/my_schedule_page.dart';
 import 'package:Lavapp/utils/colors.dart';
 
 class HomePage extends StatelessWidget {
@@ -19,6 +21,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocListener<NavigationBloc, NavigationState>(
       listener: (context, state) {
+
         if (state is ScheduleState) {
           Navigator.push(
             context,
@@ -28,68 +31,54 @@ class HomePage extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => LiveMachinesPage()),
+            );
+            }else if (state is MyScheduleState) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => MySchedulePage()),
           );
         } else if (state is HomeState) {
           Navigator.popUntil(context, (route) => route.isFirst);
         }
       },
       child: Scaffold(
-        appBar: PreferredSize(
-          preferredSize:
-              const Size.fromHeight(150.0), // Aumentando a altura da AppBar
-          child: Container(
-            decoration: BoxDecoration(
-              color: AppColors.white, // Cor da AppBar
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.5),
-                  spreadRadius: 1,
-                  blurRadius: 2,
-                  offset: Offset(0, 4), // Sombra na parte de baixo
-                ),
-              ],
-            ),
-            child: AppBar(
-              backgroundColor: AppColors
-                  .white, // Deixa transparente para o Container cuidar da cor
-              elevation: 0, // Remove a sombra padrão da AppBar
-              flexibleSpace: Padding(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 16.0, vertical: 20.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text('Good Morning',
-                        style: TextStyle(
-                          color: AppColors.gray,
-                          fontWeight: FontWeight.bold,
-                        )),
-                    const Text('Usuário',
-                        style: TextStyle(
-                            fontSize: 24,
-                            color: AppColors.darkBlue,
-                            fontWeight: FontWeight.bold)),
-                    const SizedBox(height: 8),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 6),
-                      decoration: BoxDecoration(
-                        color: AppColors.lightBlue,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: const Text('R\$ 00,00',
-                          style: TextStyle(color: Colors.white)),
-                    ),
-                  ],
+        appBar: CustomAppBar(
+          content: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Good Morning',
+                style: TextStyle(
+                  color: AppColors.gray,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-            ),
+              const Text(
+                'Usuário',
+                style: TextStyle(
+                  fontSize: 24,
+                  color: AppColors.darkBlue,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                decoration: BoxDecoration(
+                  color: AppColors.lightBlue,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: const Text(
+                  'R\$ 00,00',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ],
           ),
         ),
         body: Padding(
-          padding: const EdgeInsets.only(
-              left: 10.0, right: 10.0, bottom: 16.0, top: 0),
+          padding: const EdgeInsets.all(10.0),
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -149,18 +138,18 @@ class HomePage extends StatelessWidget {
 
   Widget _buildLavagemItem(BuildContext context, String title) {
     return Container(
-      padding: EdgeInsets.all(12),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
-          BoxShadow(blurRadius: 4, color: Colors.grey.withOpacity(0.5))
+          BoxShadow(blurRadius: 4, color: Colors.grey.withOpacity(0.5)),
         ],
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(title, style: TextStyle(fontSize: 16)),
+          Text(title, style: const TextStyle(fontSize: 16)),
           _buildTimeRemaining(context),
         ],
       ),
@@ -169,12 +158,12 @@ class HomePage extends StatelessWidget {
 
   Widget _buildAgendamentoItem(BuildContext context, String scheduleTime) {
     return Container(
-      padding: EdgeInsets.all(12),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
-          BoxShadow(blurRadius: 4, color: Colors.grey.withOpacity(0.5))
+          BoxShadow(blurRadius: 4, color: Colors.grey.withOpacity(0.5)),
         ],
       ),
       child: Row(
@@ -197,7 +186,6 @@ class HomePage extends StatelessWidget {
         ),
       ),
       onPressed: () {
-        // Adicione a ação aqui
         BlocProvider.of<NavigationBloc>(context)
             .add(NavigateToMySchedulePage());
       },
@@ -211,16 +199,14 @@ class HomePage extends StatelessWidget {
   Widget _buildTimeScheduled(BuildContext context, String scheduleTime) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         backgroundColor: AppColors.lightBlue,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
       ),
       onPressed: () {
-        // Adicione a ação aqui
-        BlocProvider.of<NavigationBloc>(context)
-            .add(NavigateToLiveMachinesPage());
+        BlocProvider.of<NavigationBloc>(context).add(NavigateToMySchedulePage());
       },
       child: Text(
         scheduleTime,
@@ -231,7 +217,7 @@ class HomePage extends StatelessWidget {
 
   Widget _buildAgenda(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -245,7 +231,6 @@ class HomePage extends StatelessWidget {
         ],
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           _buildAgendaButton(context, 'Agendar lavadora'),
           const SizedBox(height: 16),
@@ -258,7 +243,6 @@ class HomePage extends StatelessWidget {
   Widget _buildAgendaButton(BuildContext context, String label) {
     return ElevatedButton(
       onPressed: () {
-        // Ação do botão
         BlocProvider.of<NavigationBloc>(context).add(NavigateToSchedulePage());
         print('$label pressionado');
       },
@@ -270,10 +254,7 @@ class HomePage extends StatelessWidget {
           borderRadius: BorderRadius.circular(24),
         ),
       ),
-      child: Text(
-        label,
-        style: const TextStyle(fontSize: 16),
-      ),
+      child: Text(label, style: const TextStyle(fontSize: 16)),
     );
   }
 }
