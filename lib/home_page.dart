@@ -1,7 +1,7 @@
 import 'package:Lavapp/components/app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-// import 'schedule_page.dart';
+import 'schedule_page.dart';
 import 'pages/live_machines_page.dart';
 import 'package:Lavapp/blocs/navigation_bloc.dart';
 import 'package:Lavapp/blocs/navigation_event.dart';
@@ -23,14 +23,15 @@ class HomePage extends StatelessWidget {
       listener: (context, state) {
 
         if (state is ScheduleState) {
-          // Navigator.push(
-          //   context,
-          //   MaterialPageRoute(builder: (context) => SchedulePage()),
-          // );
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => SchedulePage()),
+          );
         } else if (state is LiveMachinesState) {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => LiveMachinesPage()),
+            );
             }else if (state is MyScheduleState) {
           Navigator.push(
             context,
@@ -178,7 +179,7 @@ class HomePage extends StatelessWidget {
   Widget _buildTimeRemaining(BuildContext context) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         backgroundColor: AppColors.lightBlue,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
@@ -186,9 +187,9 @@ class HomePage extends StatelessWidget {
       ),
       onPressed: () {
         BlocProvider.of<NavigationBloc>(context)
-            .add(NavigateToLiveMachinesPage());
+            .add(NavigateToMySchedulePage());
       },
-      child: Text(
+      child: const Text(
         'faltam 29:53 min',
         style: TextStyle(color: Colors.white),
       ),
