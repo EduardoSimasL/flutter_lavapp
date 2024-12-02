@@ -1,16 +1,20 @@
+import 'package:Lavapp/components/app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'blocs/navigation_bloc.dart';
 import 'blocs/navigation_event.dart';
 import 'blocs/navigation_state.dart';
 // import 'schedule_page.dart';
-// import 'live_machines_page.dart';
+import 'pages/live_machines_page.dart';
 import 'package:Lavapp/utils/colors.dart';
 
 class HomePage extends StatelessWidget {
-
   final List<String> statusItems = ['Lavagem 1', 'Lavagem 2', 'Lavagem 3'];
-  final List<String> agendamentoItems = ['04/12 - 12:30', '05/12 - 14:00', '06/12 - 10:00'];
+  final List<String> agendamentoItems = [
+    '04/12 - 12:30',
+    '05/12 - 14:00',
+    '06/12 - 10:00'
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -22,65 +26,48 @@ class HomePage extends StatelessWidget {
           //   MaterialPageRoute(builder: (context) => SchedulePage()),
           // );
         } else if (state is LiveMachinesState) {
-          // Navigator.push(
-          //   context,
-          //   MaterialPageRoute(builder: (context) => LiveMachinesPage()),
-          // );
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => LiveMachinesPage()),
+          );
         } else if (state is HomeState) {
           Navigator.popUntil(context, (route) => route.isFirst);
         }
       },
       child: Scaffold(
-        appBar: PreferredSize(
-          preferredSize:
-              const Size.fromHeight(150.0), // Aumentando a altura da AppBar
-          child: Container(
-            decoration: BoxDecoration(
-              color: AppColors.white, // Cor da AppBar
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.5),
-                  spreadRadius: 1,
-                  blurRadius: 2,
-                  offset: Offset(0, 4), // Sombra na parte de baixo
-                ),
-              ],
-            ),
-            child: AppBar(
-              backgroundColor: AppColors
-                  .white, // Deixa transparente para o Container cuidar da cor
-              elevation: 0, // Remove a sombra padrão da AppBar
-              flexibleSpace: Padding(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 16.0, vertical: 20.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text('Good Morning',
-                        style: TextStyle(
-                          color: AppColors.gray,
-                          fontWeight: FontWeight.bold,
-                        )),
-                    const Text('Usuário',
-                        style: TextStyle(
-                            fontSize: 24,
-                            color: AppColors.darkBlue,
-                            fontWeight: FontWeight.bold)),
-                    const SizedBox(height: 8),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-                      decoration: BoxDecoration(
-                        color: AppColors.lightBlue,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: const Text('R\$ 00,00',
-                          style: TextStyle(color: Colors.white)),
-                    ),
-                  ],
+        appBar: CustomAppBar(
+          content: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Good Morning',
+                style: TextStyle(
+                  color: AppColors.gray,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-            ),
+              const Text(
+                'Usuário',
+                style: TextStyle(
+                  fontSize: 24,
+                  color: AppColors.darkBlue,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                decoration: BoxDecoration(
+                  color: AppColors.lightBlue,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: const Text(
+                  'R\$ 00,00',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ],
           ),
         ),
         body: Padding(
@@ -131,27 +118,26 @@ class HomePage extends StatelessWidget {
   }
 
   Widget _buildStatusLavagem(BuildContext context, List<String> items) {
-  return Column(
-    children: items
-        .map((item) => Padding(
-              padding: const EdgeInsets.only(bottom: 8.0),
-              child: _buildLavagemItem(context, item),
-            ))
-        .toList(),
-  );
-}
+    return Column(
+      children: items
+          .map((item) => Padding(
+                padding: const EdgeInsets.only(bottom: 8.0),
+                child: _buildLavagemItem(context, item),
+              ))
+          .toList(),
+    );
+  }
 
-Widget _buildAgendamentos(BuildContext context, List<String> items) {
-  return Column(
-    children: items
-        .map((item) => Padding(
-              padding: const EdgeInsets.only(bottom: 8.0),
-              child: _buildAgendamentoItem(context, item),
-            ))
-        .toList(),
-  );
-}
-
+  Widget _buildAgendamentos(BuildContext context, List<String> items) {
+    return Column(
+      children: items
+          .map((item) => Padding(
+                padding: const EdgeInsets.only(bottom: 8.0),
+                child: _buildAgendamentoItem(context, item),
+              ))
+          .toList(),
+    );
+  }
 
   Widget _buildLavagemItem(BuildContext context, String title) {
     return Container(
@@ -194,45 +180,45 @@ Widget _buildAgendamentos(BuildContext context, List<String> items) {
   }
 
   Widget _buildTimeRemaining(BuildContext context) {
-  return ElevatedButton(
-    style: ElevatedButton.styleFrom(
-      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      backgroundColor: AppColors.lightBlue,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        backgroundColor: AppColors.lightBlue,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
       ),
-    ),
-    onPressed: () {
-      // Adicione a ação aqui
-      BlocProvider.of<NavigationBloc>(context).add(NavigateToLiveMachinesPage());
-    },
-    child: Text(
-      'faltam 29:53 min',
-      style: TextStyle(color: Colors.white),
-    ),
-  );
-}
-
-Widget _buildTimeScheduled(BuildContext context, String scheduleTime) {
-  return ElevatedButton(
-    style: ElevatedButton.styleFrom(
-      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      backgroundColor: AppColors.lightBlue,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
+      onPressed: () {
+        // Adicione a ação aqui
+        BlocProvider.of<NavigationBloc>(context)
+            .add(NavigateToLiveMachinesPage());
+      },
+      child: Text(
+        'faltam 29:53 min',
+        style: TextStyle(color: Colors.white),
       ),
-    ),
-    onPressed: () {
-      // Adicione a ação aqui
-      //BlocProvider.of<NavigationBloc>(context).add(NavigateToLiveMachinesPage());
-    },
-    child: Text(
-      scheduleTime,
-      style: TextStyle(color: Colors.white),
-    ),
-  );
-}
+    );
+  }
 
+  Widget _buildTimeScheduled(BuildContext context, String scheduleTime) {
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        backgroundColor: AppColors.lightBlue,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+      ),
+      onPressed: () {
+        // Adicione a ação aqui
+        //BlocProvider.of<NavigationBloc>(context).add(NavigateToLiveMachinesPage());
+      },
+      child: Text(
+        scheduleTime,
+        style: TextStyle(color: Colors.white),
+      ),
+    );
+  }
 
   Widget _buildAgenda(BuildContext context) {
     return Container(
