@@ -25,10 +25,26 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
       child: AppBar(
         backgroundColor: AppColors.white, // Deixa transparente
-        elevation: 0, // Remove a sombra padrão da AppBar
+        elevation: 0,
         flexibleSpace: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
-          child: content, // Insere o conteúdo personalizado
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(child: content), // O conteúdo flexível da AppBar
+              SizedBox(
+                height: 70,
+                width: 70,
+                child: CircleAvatar(
+                  radius: 35, // Tamanho do avatar
+                  backgroundImage:
+                      const AssetImage('assets/image/generic_profile_img.png'), // Caminho da imagem genérica
+                  backgroundColor: Colors.grey.shade200, // Cor de fundo, caso não haja imagem
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

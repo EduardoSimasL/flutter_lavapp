@@ -1,20 +1,10 @@
+import 'package:Lavapp/blocs/navigation_bloc.dart';
+import 'package:Lavapp/blocs/navigation_event.dart';
+import 'package:Lavapp/pages/cadastro_page.dart';
+import 'package:Lavapp/pages/home_page.dart';
+import 'package:Lavapp/utils/colors.dart';
 import 'package:flutter/material.dart';
-
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: LoginPage(),
-    );
-  }
-}
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class LoginPage extends StatelessWidget {
   @override
@@ -41,7 +31,7 @@ class LoginPage extends StatelessWidget {
             const Text(
               'Login',
               style: TextStyle(
-                color: Color(0xFFE87A30),
+                color: AppColors.orange,
                 fontWeight: FontWeight.bold,
                 fontSize: 30,
                 fontFamily: 'Poppins',
@@ -50,10 +40,11 @@ class LoginPage extends StatelessWidget {
             const SizedBox(height: 20),
             Column(
               children: [
+                // Campo E-mail
                 TextField(
                   decoration: InputDecoration(
                     filled: true,
-                    fillColor: const Color(0xFF41A3FE),
+                    fillColor: AppColors.lightBlue,
                     hintText: 'E-mail',
                     hintStyle: const TextStyle(
                       color: Colors.white,
@@ -72,7 +63,7 @@ class LoginPage extends StatelessWidget {
                   obscureText: true,
                   decoration: InputDecoration(
                     filled: true,
-                    fillColor: const Color(0xFF41A3FE),
+                    fillColor: AppColors.lightBlue,
                     hintText: 'Senha',
                     hintStyle: const TextStyle(
                       color: Colors.white,
@@ -90,13 +81,19 @@ class LoginPage extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    GestureDetector(
-                      onTap: () {},
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => CadastroScreen()),
+                        );
+                      },
                       child: const Text(
                         'Cadastre-se',
                         style: TextStyle(
-                          color: Color(0xFFE87A30),
-                          fontSize: 20,
+                          color: AppColors.orange,
+                          fontSize: 25,
                           fontFamily: 'Poppins',
                           fontWeight: FontWeight.bold,
                         ),
@@ -104,16 +101,19 @@ class LoginPage extends StatelessWidget {
                     ),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF392AAB), // Fundo azul
+                        backgroundColor: AppColors.darkBlue,
                         shape: RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.circular(10), // Borda arredondada
+                          borderRadius: BorderRadius.circular(10),
                         ),
                         padding: const EdgeInsets.symmetric(
                             horizontal: 30, vertical: 15),
                       ),
                       onPressed: () {
-                        // Ação ao clicar no botão Entrar
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(builder: (context) => HomePage()),
+                          (route) => false, // Remove todas as rotas anteriores
+                        );
                       },
                       child: const Text(
                         'Entrar',
@@ -121,7 +121,7 @@ class LoginPage extends StatelessWidget {
                           fontSize: 25,
                           fontFamily: 'Poppins',
                           fontWeight: FontWeight.bold,
-                          color: Colors.white, // Texto branco
+                          color: Colors.white,
                         ),
                       ),
                     ),
