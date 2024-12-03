@@ -1,9 +1,7 @@
+import 'package:Lavapp/components/app_bar.dart';
+import 'package:Lavapp/pages/live_machines_page.dart';
 import 'package:Lavapp/utils/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'blocs/navigation_bloc.dart';
-import 'blocs/navigation_event.dart';
-import 'blocs/navigation_state.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class SchedulePage extends StatefulWidget {
@@ -53,23 +51,10 @@ class _SchedulePageState extends State<SchedulePage> {
     setState(() {
       _selectedTimes[DateUtils.dateOnly(_selectedDay!)] = time;
     });
-    _scheduleAppointment(time);
-  }
-
-  void _scheduleAppointment(String time) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Agendamento Confirmado'),
-        content: Text('Seu horário de $time foi agendado com sucesso!'),
-        actions: [
-          TextButton(
-            child: Text('OK'),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-        ],
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => LiveMachinesPage(time: time),
       ),
     );
   }
@@ -77,48 +62,25 @@ class _SchedulePageState extends State<SchedulePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize:
-            const Size.fromHeight(150.0), // Aumentando a altura da AppBar
-        child: Container(
-          decoration: BoxDecoration(
-            color: AppColors.white, // Cor da AppBar
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.5),
-                spreadRadius: 1,
-                blurRadius: 2,
-                offset: Offset(0, 4), // Sombra na parte de baixo
-              ),
-            ],
-          ),
-          child: AppBar(
-            leading: IconButton(
-              icon: Icon(Icons.arrow_back),
-              onPressed: () {
-                Navigator.of(context).pop();
-                //BlocProvider.of<NavigationBloc>(context).add(NavigateToHomePage());
-              },
-            ),
-            backgroundColor: AppColors
-                .white, // Deixa transparente para o Container cuidar da cor
-            elevation: 0, // Remove a sombra padrão da AppBar
-            flexibleSpace: const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Agenda',
-                      style: TextStyle(
-                          fontSize: 24,
-                          color: AppColors.orange,
-                          fontWeight: FontWeight.bold)),
-                  SizedBox(height: 8),
-                ],
+      appBar: const CustomAppBar(
+        content: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(height: 20),
+            Padding(
+              padding: EdgeInsets.only(left: 20.0),
+              child: Text(
+                'Agenda',
+                style: TextStyle(
+                  fontSize: 24,
+                  color: AppColors.orange,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
-          ),
+            SizedBox(height: 8),
+          ],
         ),
       ),
       body: Padding(
@@ -126,6 +88,7 @@ class _SchedulePageState extends State<SchedulePage> {
         child: Column(
           children: [
             Card(
+              color: AppColors.white,
               margin:
                   const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
               elevation: 4.0,
@@ -164,7 +127,7 @@ class _SchedulePageState extends State<SchedulePage> {
                   },
                   calendarStyle: CalendarStyle(
                     selectedDecoration: BoxDecoration(
-                      color: Colors.blue,
+                      color: AppColors.lightBlue,
                       shape: BoxShape.circle,
                     ),
                     todayDecoration: BoxDecoration(
@@ -196,6 +159,7 @@ class _SchedulePageState extends State<SchedulePage> {
                                   DateUtils.dateOnly(_selectedDay!)] ==
                               time;
                           return Card(
+                            color: AppColors.white,
                             margin: EdgeInsets.symmetric(
                                 vertical: 4.0, horizontal: 8.0),
                             elevation: 4.0,

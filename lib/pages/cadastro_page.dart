@@ -1,18 +1,6 @@
+import 'package:Lavapp/pages/login_page.dart';
+import 'package:Lavapp/utils/colors.dart';
 import 'package:flutter/material.dart';
-
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: CadastroScreen(),
-    );
-  }
-}
 
 class CadastroScreen extends StatelessWidget {
   @override
@@ -23,19 +11,18 @@ class CadastroScreen extends StatelessWidget {
         backgroundColor: Colors.white,
         elevation: 0,
         title: const Padding(
-          padding: EdgeInsets.only(top: 20),
+          padding: EdgeInsets.only(top: 50),
           child: Text(
             'Cadastro',
             style: TextStyle(
-              fontSize: 24,
+              fontSize: 30,
               fontWeight: FontWeight.bold,
-              color: Colors.orange,
+              color: AppColors.orange,
             ),
           ),
         ),
         toolbarHeight: 80,
         titleSpacing: 0,
-        leading: const SizedBox(),
       ),
       body: Center(
         child: SingleChildScrollView(
@@ -55,19 +42,31 @@ class CadastroScreen extends StatelessWidget {
               const SizedBox(height: 15),
               CustomTextField(hintText: 'Senha'),
               const SizedBox(height: 30),
-              ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.indigo,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+              Align(
+                alignment: Alignment.centerRight,
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => LoginPage()),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.darkBlue,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 50, vertical: 15),
                   ),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
-                ),
-                child: const Text(
-                  'Cadastrar',
-                  style: TextStyle(fontSize: 18, color: Colors.white),
+                  child: const Text(
+                    'Cadastrar',
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
               ),
             ],

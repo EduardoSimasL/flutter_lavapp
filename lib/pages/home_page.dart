@@ -1,15 +1,16 @@
-import 'package:Lavapp/components/app_bar.dart';
+import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'schedule_page.dart';
-import 'pages/live_machines_page.dart';
-import 'package:Lavapp/blocs/navigation_bloc.dart';
-import 'package:Lavapp/blocs/navigation_event.dart';
-import 'package:Lavapp/blocs/navigation_state.dart';
-import 'package:Lavapp/my_schedule_page.dart';
+import 'package:Lavapp/pages/my_schedule_page.dart';
 import 'package:Lavapp/utils/colors.dart';
+import 'package:Lavapp/components/app_bar.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   final List<String> statusItems = ['Lavagem 1', 'Lavagem 2', 'Lavagem 3'];
   final List<String> agendamentoItems = [
     '04/12 - 12:30',
@@ -17,69 +18,88 @@ class HomePage extends StatelessWidget {
     '06/12 - 10:00'
   ];
 
+  String _getGreeting() {
+    final hour = DateTime.now().hour;
+
+    if (hour >= 5 && hour < 12) {
+      return 'Good Morning';
+    } else if (hour >= 12 && hour < 18) {
+      return 'Good Afternoon';
+    } else {
+      return 'Good Evening';
+    }
+  }
+
+  Duration remainingTime = Duration(minutes: 29, seconds: 59);
+  Timer? _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    _startCountdown();
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  void _startCountdown() {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      setState(() {
+        if (remainingTime.inSeconds > 0) {
+          remainingTime = remainingTime - const Duration(seconds: 1);
+        } else {
+          timer.cancel();
+        }
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return BlocListener<NavigationBloc, NavigationState>(
-      listener: (context, state) {
-
-        if (state is ScheduleState) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => SchedulePage()),
-          );
-        } else if (state is LiveMachinesState) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => LiveMachinesPage()),
-            );
-            }else if (state is MyScheduleState) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => MySchedulePage()),
-          );
-        } else if (state is HomeState) {
-          Navigator.popUntil(context, (route) => route.isFirst);
-        }
-      },
-      child: Scaffold(
-        appBar: CustomAppBar(
-          content: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Good Morning',
-                style: TextStyle(
-                  color: AppColors.gray,
-                  fontWeight: FontWeight.bold,
-                ),
+    return Scaffold(
+      appBar: CustomAppBar(
+        content: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              _getGreeting(),
+              style: const TextStyle(
+                color: AppColors.gray,
+                fontWeight: FontWeight.bold,
               ),
-              const Text(
-                'Usuário',
-                style: TextStyle(
-                  fontSize: 24,
-                  color: AppColors.darkBlue,
-                  fontWeight: FontWeight.bold,
-                ),
+            ),
+            const Text(
+              'Usuário',
+              style: TextStyle(
+                fontSize: 24,
+                color: AppColors.darkBlue,
+                fontWeight: FontWeight.bold,
               ),
-              const SizedBox(height: 8),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-                decoration: BoxDecoration(
-                  color: AppColors.lightBlue,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: const Text(
-                  'R\$ 00,00',
-                  style: TextStyle(color: Colors.white),
-                ),
+            ),
+            const SizedBox(height: 8),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+              decoration: BoxDecoration(
+                color: AppColors.lightBlue,
+                borderRadius: BorderRadius.circular(20),
               ),
-            ],
-          ),
+              child: const Text(
+                'R\$ 00,00',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ],
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: SingleChildScrollView(
+      ),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -150,7 +170,7 @@ class HomePage extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(title, style: const TextStyle(fontSize: 16)),
-          _buildTimeRemaining(context),
+          _buildTimeRemaining(),
         ],
       ),
     );
@@ -176,7 +196,7 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget _buildTimeRemaining(BuildContext context) {
+  Widget _buildTimeRemaining() {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -185,13 +205,10 @@ class HomePage extends StatelessWidget {
           borderRadius: BorderRadius.circular(20),
         ),
       ),
-      onPressed: () {
-        BlocProvider.of<NavigationBloc>(context)
-            .add(NavigateToMySchedulePage());
-      },
-      child: const Text(
-        'faltam 29:53 min',
-        style: TextStyle(color: Colors.white),
+      onPressed: () {},
+      child: Text(
+        '${remainingTime.inMinutes}:${(remainingTime.inSeconds % 60).toString().padLeft(2, '0')} min',
+        style: const TextStyle(color: Colors.white),
       ),
     );
   }
@@ -206,7 +223,10 @@ class HomePage extends StatelessWidget {
         ),
       ),
       onPressed: () {
-        BlocProvider.of<NavigationBloc>(context).add(NavigateToMySchedulePage());
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => MySchedulePage()),
+        );
       },
       child: Text(
         scheduleTime,
@@ -243,8 +263,10 @@ class HomePage extends StatelessWidget {
   Widget _buildAgendaButton(BuildContext context, String label) {
     return ElevatedButton(
       onPressed: () {
-        BlocProvider.of<NavigationBloc>(context).add(NavigateToSchedulePage());
-        print('$label pressionado');
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => SchedulePage()),
+        );
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: AppColors.darkBlue,
